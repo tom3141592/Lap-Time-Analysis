@@ -7,10 +7,13 @@ def get_lap_time_seconds(lap_time_string):
 	# String in format of m:ss.mmm. Need to convert minutes to seconds so split at ":"
 	lap_time_split_string = lap_time_string.split(":")
 
-
+	# Convert the number of minutes to seconds by multiplying by 60
 	minutes = int(lap_time_split_string[0])
 	minutes_to_seconds = minutes*60
+
+	# The seconds and milliseconds part can just be converted to a float.
 	seconds = float(lap_time_split_string[1])
+
 	totalseconds = minutes_to_seconds + seconds
 	return round(totalseconds, 3)
 
