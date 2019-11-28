@@ -19,21 +19,43 @@ def get_lap_time_seconds(lap_time_string):
 
 
 def get_first_lap_gaps(lap_history_file_name):
-	lap1_gaps = {}
+	lap_times = {}
 
 	with open(lap_history_file_name) as file:
 		for line_nr, line in enumerate(file):
 			if line_nr > 0:
 				if "LAP" in line:
-					return lap1_gaps
+					return lap_times
 				else:
 					split_line = line.split()
 					drivernumber = int(split_line[0])
 					lap_time_string = split_line[-1]
 
 					lap_time_seconds = get_lap_time_seconds(lap_time_string)
-					lap1_gaps[drivernumber] = [lap_time_seconds]
+					lap_times[drivernumber] = [lap_time_seconds]
 
 
-lap1_gaps = get_first_lap_gaps("SIL Race History.txt")
-print(lap1_gaps)
+def get_rest_of_session_lap_times(lap_analysis_file_name, lap_times):
+		with open(lap_analysis_file_name) as file:
+			for line_nr, line in enumerate(file):
+					line_type = get_line_type(line)
+
+def get_line_type(line):
+	useless_info = ["The F1 FORMULA 1 logo", "a Formula 1 company", "No part of these results",
+					"without prior permission", "the results/data relate", "Formula One World",
+					"Page" "FORMULA 1", "Race Lap Analysis", "LAP TIME"]
+
+	driver_numbers_and_names = {44: "HAM", 77: "BOT", 5: "VET", 16: "LEC", 33:"VER", 23: "ALB", 3: "RIC"}
+
+	for part in useless_info:
+		if part in line:
+			return "Useless"
+
+	new_driver_pattern = re.compile(r"\d{1,2}\s\w{3,100}\s\w{3,50}")
+	if new_driver_pattern.match(line):
+		print(new_driver_pattern.match(line))
+		return "New Driver"
+
+lap_times = get_first_lap_gaps("SIL Race History.txt")
+get_rest_of_session_lap_times("Lap Analysis.txt", lap_times)
+print(lap_times)
